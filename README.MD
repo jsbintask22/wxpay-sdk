@@ -13,13 +13,7 @@
 
 支持多种不同方式调用：
 ```java
-HttpConfig httpConfig = HttpConfig.builder()
-                .connectTimeout(20000)
-                .readTimeout(30000)
-                .callTimeout(40000)
-                .build();
-
-        WxPayEnv wxPayEnv = new WxPayEnv("你的appid",
+WxPayEnv wxPayEnv = new WxPayEnv("你的appid",
                 "你的商户id",
                 "你的 api key( 沙箱环境请调用 DefaultWxPayClient.getSignkey()或者postman手动获取， 线上环境登录微信商户平台获取",
                 "你的 ssl证书，登录商户平台生成，将  xxx.p12文件放到 resources目录下",
@@ -30,7 +24,7 @@ HttpConfig httpConfig = HttpConfig.builder()
 
         DefaultWxPayClient wxPayClient = new DefaultWxPayClient(wxPayEnv);
 
-        // lambda response  自动验签
+        // 1. lambda response  自动验签 切换域名重试
         wxPayClient.preOrder(preOrderRequest(), wxPayPreOrderResponse -> {
             System.out.println("微信下单成功：");
             System.out.println(wxPayPreOrderResponse);
@@ -39,7 +33,7 @@ HttpConfig httpConfig = HttpConfig.builder()
             System.out.println("微信下单失败，请检查：" + wxPayCommonError);
         });
 
-        // pojo response  自动验签
+        // 2. pojo response  自动验签 切换域名重试
         WxPayPreOrderResponse preOrderResponse = wxPayClient.execute(preOrderRequest());
         if (preOrderResponse.success()) {
             // 下单成功
@@ -50,7 +44,7 @@ HttpConfig httpConfig = HttpConfig.builder()
             System.out.println("微信下单失败，请检查：" + preOrderResponse.getErrCode() + " : " + preOrderResponse.getErrCodeDes());
         }
 
-        // raw request  不做序列化，不验签
+        // 3. raw request  不做序列化，不验签，不支持重试
         Object rawResponse = wxPayClient.rawExecute(WxPayConstants.DOMAIN_API, preOrderRequest(), wxPayEnv.debugRequestBody());
         System.out.println("执行成功：" + rawResponse);
 ```
