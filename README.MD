@@ -1,6 +1,6 @@
 ## 可扩展，易使用的微信支付工具 WxpaySDK
 
-![authentication](https://raw.githubusercontent.com/jsbintask22/static/master/wxpay/wxpay.png)
+![WxPaySDK](https://raw.githubusercontent.com/jsbintask22/static/master/wxpay/wxpay-1.png)
 
 使用：
 ```xml
