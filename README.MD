@@ -63,5 +63,5 @@ HttpConfig httpConfig = HttpConfig.builder()
 6. 支持域名切换重试
 
 **TODO**
--[]支持自动向微信报告api result
--[]支持自动切换主备域名
+-[] 支持自动向微信报告api result
+-[] 支持自动切换主备域名
