@@ -4,9 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github</groupId>
+    <groupId>com.github.jsbintask22</groupId>
     <artifactId>wxpay-sdk</artifactId>
     <version>1.0.0</version>
+    <packaging>jar</packaging>
 
     <name>wxpay-sdk</name>
     <description>wxpay-sdk is a tool for WX pay.</description>
@@ -17,7 +18,10 @@
             <name>jsbintask</name>
             <email>jsbintask@gmail.com</email>
             <url>jsbintask.cn</url>
-            <timezone>Asia/Shanghai</timezone>
+            <timezone>+8</timezone>
+            <roles>
+                <role>developer</role>
+            </roles>
         </developer>
     </developers>
 
@@ -29,14 +33,20 @@
 
     <licenses>
         <license>
-            <name>The Apache Software License, Version 2.0</name>
+            <name>Apache 2</name>
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
         </license>
     </licenses>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <profiles>
         <profile>
-            <id>release</id>
+            <id>release</id> <!-- 部署要用到 -->
             <build>
                 <plugins>
                     <!-- Source -->
@@ -57,13 +67,9 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.9.1</version>
+                        <version>3.1.1</version>
                         <configuration>
-                            <show>private</show>
-                            <nohelp>true</nohelp>
-                            <charset>UTF-8</charset>
-                            <encoding>UTF-8</encoding>
-                            <docencoding>UTF-8</docencoding>
+                            <outputDirectory>${project.build.directory}/apidocs</outputDirectory>
                         </configuration>
                         <executions>
                             <execution>
@@ -71,14 +77,17 @@
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
+                                <configuration>
+                                    <additionalparam>-Xdoclint:none</additionalparam>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
                     <!-- GPG -->
-                    <plugin>
+                    <plugin> <!-- 进行延签 -->
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.5</version>
+                        <version>1.6</version>
                         <executions>
                             <execution>
                                 <phase>verify</phase>
