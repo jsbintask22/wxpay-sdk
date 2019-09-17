@@ -1,5 +1,7 @@
 ## 可扩展，易使用的微信支付工具 WxpaySDK
 
+![authentication](https://raw.githubusercontent.com/jsbintask22/static/master/wxpay/wxpay.png)
+
 使用：
 ```xml
 <dependency>
@@ -63,5 +65,5 @@ HttpConfig httpConfig = HttpConfig.builder()
 6. 支持域名切换重试
 
 **TODO**
--[]支持自动向微信报告api result
--[]支持自动切换主备域名
+1. 支持自动向微信报告api result
+2. 支持自动切换主备域名
