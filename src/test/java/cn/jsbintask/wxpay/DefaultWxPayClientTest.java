@@ -35,6 +35,7 @@ public class DefaultWxPayClientTest {
                 true,  /* 是否日志打印 request，response， 沙箱环境建议开启 */
                 httpConfig);
 
+        // 建议设置为单例
         DefaultWxPayClient wxPayClient = new DefaultWxPayClient(wxPayEnv);
 
         // lambda response  自动验签 切换域名重试
