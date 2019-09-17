@@ -35,9 +35,10 @@ public class DefaultWxPayClientTest {
                 true,  /* 是否日志打印 request，response， 沙箱环境建议开启 */
                 httpConfig);
 
+        // 建议设置为单例
         DefaultWxPayClient wxPayClient = new DefaultWxPayClient(wxPayEnv);
 
-        // lambda response  自动验签
+        // lambda response  自动验签 切换域名重试
         wxPayClient.preOrder(preOrderRequest(), wxPayPreOrderResponse -> {
             System.out.println("微信下单成功：");
             System.out.println(wxPayPreOrderResponse);
@@ -46,7 +47,7 @@ public class DefaultWxPayClientTest {
             System.out.println("微信下单失败，请检查：" + wxPayCommonError);
         });
 
-        // pojo response  自动验签
+        // pojo response  自动验签 切换域名重试
         WxPayPreOrderResponse preOrderResponse = wxPayClient.execute(preOrderRequest());
         if (preOrderResponse.success()) {
             // 下单成功
@@ -57,7 +58,7 @@ public class DefaultWxPayClientTest {
             System.out.println("微信下单失败，请检查：" + preOrderResponse.getErrCode() + " : " + preOrderResponse.getErrCodeDes());
         }
 
-        // raw request  不做序列化，不验签
+        // raw request  不做序列化，不验签，不支持重试
         Object rawResponse = wxPayClient.rawExecute(WxPayConstants.DOMAIN_API, preOrderRequest(), wxPayEnv.debugRequestBody());
         System.out.println("执行成功：" + rawResponse);
 
