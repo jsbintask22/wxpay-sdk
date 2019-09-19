@@ -87,6 +87,7 @@ hs_err_pid*
 # IntelliJ project files
 .idea
 *.iml
+wxpaysdk.md
 out
 gen
 target

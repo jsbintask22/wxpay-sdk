@@ -5,7 +5,6 @@ import cn.jsbintask.wxpay.http.OkHttpManager;
 import cn.jsbintask.wxpay.request.*;
 import cn.jsbintask.wxpay.response.*;
 import cn.jsbintask.wxpay.utils.WxPayUtils;
-import cn.jsbintask.wxpay.utils.XmlUtils;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -14,11 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.Reader;
-import java.lang.reflect.Field;
-import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * @author jsbintask@gmail.com
@@ -230,9 +226,9 @@ public class DefaultWxPayClient extends AbstractWxPayClient {
     <T extends WxPayResponse> Object rawExecute(String domain, AbstractWxPayRequest<T> wxPayRequest, boolean debugRequest) throws WxPayException {
         T tr = null;
         long startTime = System.currentTimeMillis();
-        String requestBody = signRequest(wxPayRequest, wxPayEnv);
+        String requestBody = signRequest(wxPayRequest);
 
-        String url = "https://" + domain + wxPayEnv.envUri() + wxPayRequest.apiSuffix();
+        String url = "https://" + domain + getWxPayEnv().envUri() + wxPayRequest.apiSuffix();
         Request okHttpRequest = new Request.Builder()
                 .url(url)
                 .addHeader("User-Agent", WxPayConstants.USER_AGENT)
@@ -275,57 +271,6 @@ public class DefaultWxPayClient extends AbstractWxPayClient {
             throw new WxPayException(e);
         } finally {
             log.debug("execute api {} takes {}ms", url, System.currentTimeMillis() - startTime);
-        }
-    }
-
-
-    @SuppressWarnings("all")
-    private <T extends WxPayResponse> String signRequest(AbstractWxPayRequest<T> wxPayRequest, WxPayEnv wxPayEnv) throws WxPayException {
-        Objects.requireNonNull(wxPayRequest, "request can not be empty.");
-
-        wxPayRequest.setNonceStr(WxPayUtils.nonceStr());
-        wxPayRequest.setMchId(wxPayEnv.getMchId());
-        // remove already sign.
-        wxPayRequest.setSign(null);
-
-        if (!(wxPayRequest instanceof WxPaySandBoxSignKeyRequest)) {
-            wxPayRequest.setAppId(wxPayEnv.getAppId());
-            wxPayRequest.setSignType(wxPayEnv.signType());
-            try {
-                Field notifyUrl = wxPayRequest.getClass().getDeclaredField("notifyUrl");
-                notifyUrl.setAccessible(true);
-                notifyUrl.set(wxPayRequest, wxPayEnv.getNotifyUrl());
-            } catch (Exception ignored) {
-            }
-        }
-
-        HashMap<String, String> map = XmlUtils.xml2Obj(XmlUtils.obj2Xml(wxPayRequest), HashMap.class);
-        List<String> signContent = new ArrayList<>(map.keySet().size());
-        map.forEach((key, value) -> {
-            signContent.add(key + "=" + value);
-        });
-        Collections.sort(signContent);
-        String collect = signContent.stream().collect(Collectors.joining("&"));
-
-        if (!(wxPayRequest instanceof WxPaySandBoxSignKeyRequest)) {
-            collect += "&key=" + wxPayEnv.getApiKey();
-        }
-        try {
-            wxPayRequest.setSign(doSign(wxPayEnv.signType(), wxPayEnv.getApiKey(), collect));
-            return XmlUtils.obj2Xml(wxPayRequest);
-        } catch (Exception e) {
-            log.error("sign content {} with {} error {}", collect, wxPayEnv.signType(), e.getMessage());
-            throw new WxPayException(e);
-        }
-    }
-
-    private String doSign(String signType, String key, String data) throws Exception {
-        if (signType.equals(WxPayConstants.MD5)) {
-            return WxPayUtils.MD5(data);
-        } else if (WxPayConstants.HMACSHA256.equals(signType)) {
-            return WxPayUtils.HMACSHA256(data, key);
-        } else {
-            throw new WxPayException("unsupport sign_type: " + signType);
         }
     }
 }

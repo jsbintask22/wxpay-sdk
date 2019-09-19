@@ -33,17 +33,11 @@ public class WxPayOrderQueryResponse extends WxPayResponse<WxPayOrderQueryReques
 
     /**
      * SUCCESS—支付成功
-     * <p>
      * REFUND—转入退款
-     * <p>
      * NOTPAY—未支付
-     * <p>
      * CLOSED—已关闭
-     * <p>
      * REVOKED—已撤销（付款码支付）
-     * <p>
      * USERPAYING--用户支付中（付款码支付）
-     * <p>
      * PAYERROR--支付失败(其他原因，如银行返回失败)
      */
     private String tradeState;
@@ -89,7 +83,6 @@ public class WxPayOrderQueryResponse extends WxPayResponse<WxPayOrderQueryReques
     /**
      * CASH--充值代金券  代金券类型
      * NO_CASH---非充值优惠券
-     * <p>
      * 开通免充值券功能，并且订单使用了优惠券后有返回（取值：CASH、NO_CASH）。$n为下标,从0开始编号，举例：coupon_type_$0
      */
     @WrapperPrefix("coupon_type_")

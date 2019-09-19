@@ -74,11 +74,8 @@ public class WxPayQueryRefundResponse extends WxPayResponse<WxPayQueryRefundRequ
     /**
      * 退款渠道	refund_channel_$n	否	String(16)	ORIGINAL
      * ORIGINAL—原路退款
-     * <p>
      * BALANCE—退回到余额
-     * <p>
      * OTHER_BALANCE—原账户异常退到其他余额账户
-     * <p>
      * OTHER_BANKCARD—原银行卡异常退到其他银行卡
      */
     @WrapperPrefix("refund_channel_")
